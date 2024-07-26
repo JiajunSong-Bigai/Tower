@@ -1,27 +1,11 @@
-import logging
 from typing import List
 
 import fire
 from pyswip import Prolog
 
-# Set up logging
-logging.basicConfig(
-    level=logging.DEBUG,  # Adjust the logging level as needed
-    format="%(asctime)s - %(levelname)s - %(message)s",
-    datefmt="%Y-%m-%d %H:%M:%S",  # Adjust datefmt to exclude milliseconds
-)
-logger = logging.getLogger(__name__)
-
 
 def facts_from_file(path_to_facts):
-    logger.info(f"Reading facts from file: {path_to_facts}")
-    try:
-        with open(path_to_facts, "r") as file:
-            facts = file.readlines()
-    except FileNotFoundError:
-        logger.error(f"File not found: {path_to_facts}")
-        return []
-
+    facts = open(path_to_facts).readlines()
     return_facts = []
     for fact in facts:
         fact = fact.strip()
@@ -38,24 +22,26 @@ def facts_from_file(path_to_facts):
 
 
 class DD:
-    def __init__(self, path_to_rules) -> None:
+    def __init__(
+        self,
+        path_to_rules,
+    ) -> None:
         self.prolog = Prolog()
-        logger.info(f"Consulting Prolog rules from file: {path_to_rules}")
         self.prolog.consult(path_to_rules)
 
     def read_facts(self, facts: List[str]):
-        logger.info("Asserting facts into Prolog")
+        print("FACTS\n" + "=" * 50)
         for fact in facts:
-            logger.debug(f"Asserting fact: {fact}")
+            print(fact)
             self.prolog.assertz(fact)
 
     def query(self, q):
-        logger.info(f"Querying Prolog: {q}")
+        print(f"q: {q}\n", end="=> ")
         result = list(self.prolog.query(q))
         if result:
-            logger.info(f"Query result: {result}")
+            print(result, end="\n\n")
         else:
-            logger.info("Query result: false")
+            print("false")
 
 
 def main(path_to_rules="rules.pl", path_to_facts="facts.pl"):
@@ -72,7 +58,7 @@ def main(path_to_rules="rules.pl", path_to_facts="facts.pl"):
     dd = DD(path_to_rules=path_to_rules)
     dd.read_facts(facts)
 
-    logger.info("Executing queries")
+    print("\n\nQUERIES\n" + "=" * 50)
     for q in queries:
         dd.query(q)
 
