@@ -30,18 +30,12 @@ class DD:
         self.prolog.consult(path_to_rules)
 
     def read_facts(self, facts: List[str]):
-        print("FACTS\n" + "=" * 50)
         for fact in facts:
-            print(fact)
             self.prolog.assertz(fact)
 
     def query(self, q):
-        print(f"q: {q}\n", end="=> ")
         result = list(self.prolog.query(q))
-        if result:
-            print(result, end="\n\n")
-        else:
-            print("false")
+        return result if result else "false"
 
 
 def main(path_to_rules="rules.pl", path_to_facts="facts.pl"):
@@ -58,9 +52,9 @@ def main(path_to_rules="rules.pl", path_to_facts="facts.pl"):
     dd = DD(path_to_rules=path_to_rules)
     dd.read_facts(facts)
 
-    print("\n\nQUERIES\n" + "=" * 50)
     for q in queries:
-        dd.query(q)
+        result = dd.query(q)
+        print("Query:", q, " => ", result)
 
 
 if __name__ == "__main__":
