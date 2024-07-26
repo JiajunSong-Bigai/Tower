@@ -1,6 +1,6 @@
 % Facts on weather
 weather(rain).
-wind_direction(north).
+wind_direction(east).
 
 % Facts on geology
 north_adjacent(current, village).
