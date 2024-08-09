@@ -1,0 +1,156 @@
+{
+    "process_id": "proc-001",
+    "start_time": "2024-09-15T10:30:00Z",
+    "end_time": "2024-09-15T10:30:05Z",
+    "status": "completed",
+    "steps": [
+      {
+        "step_id": "step-001",
+        "name": "问题分析",
+        "api": "/api/analyze-question",
+        "input": {
+          "question_text": "请对： test-104, 分析一下火情未来的发展方向？",
+          "question_image": "test_figures/test-104.jpg"
+        },
+        "output": {
+          "question_id": "q-104",
+          "question_text": "请对： test-104, 分析一下火情未来的发展方向？",
+          "question_image": "test_figures/test-104.jpg",
+          "question_type": "森林防火"
+        },
+        "timestamp": "2024-09-15T10:30:01Z"
+      },
+      {
+        "step_id": "step-002",
+        "name": "知识点定位",
+        "api": "/api/locate-knowledge",
+        "input": {
+          "question_type": "森林防火",
+          "question_text": "请对： test-104, 分析一下火情未来的发展方向？"
+        },
+        "output": {
+          "knowledge_points": ["火情发展"],
+          "fact_nodes": ["当前天气", "地形", "植被", "周边环境"]
+        },
+        "timestamp": "2024-09-15T10:30:02Z"
+      },
+      {
+        "step_id": "step-003",
+        "name": "事实节点信息获取",
+        "api": "/api/fact-node/{node_id}",
+        "sub_steps": [
+            {
+            "node_id": "当前天气",
+            "input": {
+                "location": "test-104",
+                "time": "2024-09-15T10:30:00Z",
+                "image": "test_figures/test-104.jpg"
+            },
+            "output": {
+              "气温": 30,
+              "风力": 15,
+              "风向": "东北风",
+              "湿度": 20
+            }
+            },
+          {
+            "node_id": "地形",
+            "input": {
+                "location": "test-104",
+                "time": "2024-09-15T10:30:00Z",
+                "image": "test_figures/test-104.jpg"
+            },
+            "output": {
+              "海拔": 500,
+              "坡度": 15,
+              "方位": "南"
+            }
+          },
+          {
+            "node_id": "植被",
+            "input": {
+                "location": "test-104",
+                "time": "2024-09-15T10:30:00Z",
+                "image": "test_figures/test-104.jpg"
+            },
+            "output": {
+              "类型": "针叶林",
+              "密度": "高",
+              "湿度": "低"
+            }
+          },
+          {
+            "node_id": "周边环境",
+            "input": {
+                "location": "test-104",
+                "time": "2024-09-15T10:30:00Z",
+                "image": "test_figures/test-104.jpg"
+            },
+            "output": {
+                "东": ["建筑1", "建筑2"],
+                "南": ["树木1"],
+                "西": ["村庄1"],
+                "北": ["山脉1", "水库1"]
+            }
+          }
+        ],
+        "timestamp": "2024-09-15T10:30:03Z"
+      },
+      {
+        "step_id": "step-004",
+        "name": "推理执行",
+        "api": "/api/reason",
+        "input": {
+          "knowledge_points": ["火情发展"],
+          "fact_nodes": {
+            "当前天气": {
+              "temperature": 30,
+              "wind_speed": 15,
+              "wind_direction": "东北风",
+              "humidity": 20
+            },
+            "地形": {
+              "elevation": 500,
+              "slope": 15,
+              "aspect": "南"
+            },
+            "植被": {
+              "type": "针叶林",
+              "density": "高",
+              "moisture_content": "低"
+            },
+            "周边环境": {
+              "东": ["建筑1", "建筑2"],
+              "南": ["树木1"],
+              "西": ["村庄1"],
+              "北": ["山脉1", "水库1"]
+            }
+          }
+        },
+        "output": {
+          "conclusion": "火情可能会快速向南偏西方向发展，发展方向上的环境是树木和村庄。建议在村庄和山脉之间建立防火隔离带，防止火势蔓延。",
+          "reasoning_id": "reason-104"
+        },
+        "timestamp": "2024-09-15T10:30:04Z"
+      },
+      {
+        "step_id": "step-005",
+        "name": "推理过程获取",
+        "api": "/api/reasoning-process/reason-104",
+        "input": {
+          "reasoning_id": "reason-104"
+        },
+        "output": {
+          "reasoning_steps": [
+            "1. 当前天气条件显示高温、低湿度和强风，有利于火势蔓延。",
+            "2. 东北风会推动火势向南偏西方向发展。",
+            "3. 地形坡度向南，进一步促进火势向南蔓延。",
+            "4. 高密度的针叶林和低湿度的植被会加快火势蔓延速度。",
+            "5. 周边环境显示，南边是树木，西边是村庄。",
+            "6. 综合以上因素，预计火情将快速向南偏西方向发展。发展方向内人群密集，建议在村庄和山脉之间建立防火隔离带，防止火势蔓延。"
+          ]
+        },
+        "timestamp": "2024-09-15T10:30:05Z"
+      }
+    ]
+  }
